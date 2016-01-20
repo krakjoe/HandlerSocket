@@ -45,26 +45,17 @@ PHP_METHOD(Index, __construct) {
 ZEND_BEGIN_ARG_INFO_EX(php_hs_index_construct_arginfo, 0, 0, 0)
 ZEND_END_ARG_INFO() /* }}} */
 
-/* {{{ proto Index Index::find(mixed data, int op = INDEX::EQ) */
+/* {{{ proto Index Index::find(Match match, int op = INDEX::EQ) */
 PHP_METHOD(Index, find) {
-	zval *data = NULL;
+	zval *match = NULL;
+
 	zend_long op = HS_EQ;
 	
-	if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "z|l", &data, &op) != SUCCESS) {
+	if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "O", &match, HandlerSocket_Match_ce) != SUCCESS) {
 		return;
 	}
 
-	if (php_hs_op_validate(op) != SUCCESS) {
-		return;
-	}
-
-	if (Z_TYPE_P(data) != IS_STRING) {
-		convert_to_string(data);
-	} else Z_ADDREF_P(data);
-
-	php_hs_find(
-		getThis(), (php_hs_op_t) op, Z_STR_P(data), return_value);
-	zval_ptr_dtor(data);
+	php_hs_find(getThis(), match, return_value);
 }
 
 ZEND_BEGIN_ARG_INFO_EX(php_hs_index_find_arginfo, 0, 0, 1)
@@ -132,12 +123,5 @@ PHP_MINIT_FUNCTION(index) {
 	HandlerSocket_Index_ce->create_object = php_hs_index_create;
 
 	zend_declare_class_constant_string(HandlerSocket_Index_ce, ZEND_STRL("PRIMARY"), "PRIMARY");
-
-	zend_declare_class_constant_long(HandlerSocket_Index_ce, ZEND_STRL("EQ"), HS_EQ);
-	zend_declare_class_constant_long(HandlerSocket_Index_ce, ZEND_STRL("LT"), HS_LT);
-	zend_declare_class_constant_long(HandlerSocket_Index_ce, ZEND_STRL("LTE"), HS_LTE);
-	zend_declare_class_constant_long(HandlerSocket_Index_ce, ZEND_STRL("GT"), HS_GT);
-	zend_declare_class_constant_long(HandlerSocket_Index_ce, ZEND_STRL("GTE"), HS_GTE);
-
 } /* }}} */
 #endif

@@ -32,6 +32,7 @@ ZEND_DECLARE_MODULE_GLOBALS(handlersocket)
 #include "src/host.h"
 #include "src/connection.h"
 #include "src/index.h"
+#include "src/match.h"
 #include "src/result.h"
 
 /* {{{ php_handlersocket_init_globals
@@ -51,6 +52,7 @@ PHP_MINIT_FUNCTION(handlersocket)
 	PHP_MINIT(host)(INIT_FUNC_ARGS_PASSTHRU);
 	PHP_MINIT(connection)(INIT_FUNC_ARGS_PASSTHRU);
 	PHP_MINIT(index)(INIT_FUNC_ARGS_PASSTHRU);
+	PHP_MINIT(match)(INIT_FUNC_ARGS_PASSTHRU);
 	PHP_MINIT(result)(INIT_FUNC_ARGS_PASSTHRU);
 
 	return SUCCESS;

@@ -175,9 +175,11 @@ static inline php_hs_result_t* php_hs_result_from(zval *index, char *buffer, siz
 	return r;
 }
 
-php_hs_result_t* php_hs_find(zval *index, php_hs_op_t op, zend_string *cmp, zval *result) {
+php_hs_result_t* php_hs_find(zval *index, zval *match, zval *result) {
 	php_hs_index_t *i = php_hs_index_fetch(index);
 	php_hs_connection_t *r = php_hs_connection_fetch(&i->connection);
+	php_hs_match_t *m = php_hs_match_fetch(match);
+
 	char buffer[8192];
 	size_t length = 0;
 
@@ -187,8 +189,8 @@ php_hs_result_t* php_hs_find(zval *index, php_hs_op_t op, zend_string *cmp, zval
 		r->stream,
 		"%ld\t%s\t1\t%s\n",
 		i->id, 
-		php_hs_op(op), 
-		ZSTR_VAL(cmp));
+		php_hs_op(m->op), 
+		ZSTR_VAL(m->match));
 
 	if (!php_stream_get_line(r->stream, buffer, sizeof(buffer), &length)) {
 		return NULL;

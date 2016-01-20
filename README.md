@@ -30,18 +30,50 @@ namespace HandlerSocket {
 								  int 	 	$type = INDEX::PRIMARY) : Index;
 	}
 
-	class Index {
-
-		public function find(mixed $match, int $op = INDEX::EQ) : Result;
-
+	class Match {
 		const EQ;
 		const LT;
 		const LTE;
 		const GT;
 		const GTE;
 
+		public function __construct(int $op = MATCH::EQ, ... $match);
+	}
+
+	class Limit {
+
+		public function __construct(int $offset, int $len = 0);
+	}
+
+	class In {
+
+		public function __construct();
+	}
+
+	class Filter {
+
+		public function __construct(int $filter = FILTER::FILTER, int $op = MATCH::EQ);
+
+		const FILTER;
+		const WHILE;
+	}
+
+	class Mod {
+
+		public function __construct(int $op = MOD::UPDATE, ... $update);
+	}
+
+	class Index {
+
+		public function find(Match $match, Limit $limit = null, In $in = null, Filter $filter = null) : Result;
+
+		public function modify(Match $match, Limit $limit = null, In $in = null, Filter $filter = null, Mod $mod = null) : Result;
+
+		public function insert(array $data) : Result;
+		
 		const PRIMARY;
 	}
+	
 
 	class Result {
 		

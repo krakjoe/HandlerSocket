@@ -21,44 +21,10 @@
 #ifndef PHP_HS_H
 #define PHP_HS_H
 
-typedef enum _php_hs_op_t {
-	HS_EQ,
-	HS_GT,
-	HS_GTE,
-	HS_LT,
-	HS_LTE
-} php_hs_op_t;
-
-static inline char *php_hs_op(php_hs_op_t op) {
-	switch (op) {
-		case HS_EQ: return "="; break;
-		case HS_GT: return ">"; break;
-		case HS_GTE: return ">="; break;
-		case HS_LT: return "<"; break;
-		case HS_LTE: return "<="; break;
-	}
-
-	zend_throw_exception_ex(NULL, 0,  "invalid operator used");
-	return NULL;
-}
-
-static inline int php_hs_op_validate(php_hs_op_t op) {
-	switch (op) {
-		case HS_EQ:
-		case HS_GT:
-		case HS_GTE:
-		case HS_LT:
-		case HS_LTE:
-			return SUCCESS;
-
-		default:
-			zend_throw_exception_ex(NULL, 0, "invalid operator used");
-	}
-}
-
 #include "host.h"
 #include "connection.h"
 #include "index.h"
+#include "match.h"
 #include "result.h"
 
 php_hs_host_t* php_hs_host(zend_string *address, zval *result);
@@ -69,7 +35,7 @@ void php_hs_authenticate(zval *connection, zend_string *secret, zval *result);
 
 php_hs_index_t* php_hs_index(zval *connection, zend_long id, zend_string *db, zend_string *tbl, zval *cols, zend_string *name, zval *result);
 
-php_hs_result_t* php_hs_find(zval *index, php_hs_op_t op, zend_string *cmp, zval *result);
+php_hs_result_t* php_hs_find(zval *index, zval *match, zval *result);
 
 void php_hs_close(zend_object *object);
 
